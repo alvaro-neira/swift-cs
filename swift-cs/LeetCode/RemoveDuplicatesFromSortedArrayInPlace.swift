@@ -58,24 +58,12 @@ Essentially, once an element is encountered, you simply need to bypass its dupli
 
 class Solution {
     func removeDuplicates(_ nums: inout [Int]) -> Int {
-        let n = nums.count
-        if n == 0 {
-            return 0
-        }
-        var last = nums[0]
-        var fast = 1
         var slow = 1
-        while fast < n {
-            while nums[fast] == last {
-                fast += 1
-                if fast == n {
-                    return slow
-                }
+        for fast in 1..<nums.count {
+            if nums[fast] != nums[fast - 1] {
+                nums[slow] = nums[fast]
+                slow += 1
             }
-            nums[slow] = nums[fast]
-            last = nums[fast]
-            slow += 1
-            fast += 1
         }
         return slow
     }
