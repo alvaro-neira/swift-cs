@@ -37,41 +37,32 @@
 
 func findMaxConsecutiveOnes(_ nums: [Int]) -> Int {
     let n = nums.count
-    //dp[i] = length of blob of 1's INCLUDING this digit
-    var dp = [Int](repeating: 0, count: n)
-    var zeroPositions = [Int]()
-    var retVal = 0
-    if nums[0] == 1 {
-        retVal = 1
-        dp[0] = 1
-    } else {
-        zeroPositions.append(0)
-    }
-    for i in 1..<n {
-        if nums[i] == 0 {
-            dp[i] = 0
-            zeroPositions.append(i)
-        } else {
-            dp[i] = dp[i - 1] + 1
+    var longestSequence = 0
+    var left = 0
+    var right = 0
+    var numZeroes = 0
+
+    // While our window is in bounds
+    while right < n {
+
+        // Increase numZeroes if the rightmost element is 0
+        if nums[right] == 0 {
+            numZeroes += 1
         }
-    }
-    if dp[n - 1] == n {
-        return n
-    }
-    var dpReverse = [Int](repeating: 0, count: n)
-    dpReverse[n - 1] = nums[n - 1]
-    for i in stride(from: n - 2, through: 0, by: -1) {
-        if nums[i] == 0 {
-            dpReverse[i] = 0
-        } else {
-            dpReverse[i] = dpReverse[i + 1] + 1
+
+        //If our window is invalid, contract our window
+        while numZeroes == 2 {
+            if nums[left] == 0 {
+                numZeroes -= 1
+            }
+            left += 1
         }
+
+        // Update our longest sequence answer
+        longestSequence = max(longestSequence, right - left + 1)
+
+        // Expand our window
+        right += 1
     }
-    for zeroPos in zeroPositions {
-        retVal = max(
-            retVal,
-            (zeroPos > 0 ? dp[zeroPos - 1] : 0) + 1
-                + (zeroPos < n - 1 ? dpReverse[zeroPos + 1] : 0))
-    }
-    return retVal
+    return longestSequence
 }
