@@ -56,15 +56,25 @@ We need to modify the array in-place and the size of the final array would poten
 Essentially, once an element is encountered, you simply need to bypass its duplicates and move on to the next unique element.
 */
 
-class Solution {
-    func removeDuplicates(_ nums: inout [Int]) -> Int {
-        var slow = 1
-        for fast in 1..<nums.count {
-            if nums[fast] != nums[fast - 1] {
-                nums[slow] = nums[fast]
-                slow += 1
-            }
+func removeDuplicates(_ nums: inout [Int]) -> Int {
+
+    // Use the two pointer technique to remove the duplicates in-place.
+    // The first element shouldn't be touched; it's already in its correct place.
+    var writePointer = 1
+    // Go through each element in the Array.
+    for readPointer in 1..<nums.count {
+
+        // If the current element we're reading is *different* to the previous
+        // element...
+        if nums[readPointer] != nums[readPointer - 1] {
+            // Copy it into the next position at the front, tracked by writePointer.
+            nums[writePointer] = nums[readPointer]
+            // And we need to now increment writePointer, because the next element
+            // should be written one space over.
+            writePointer += 1
         }
-        return slow
     }
+
+    // This turns out to be the correct length value.
+    return writePointer
 }
