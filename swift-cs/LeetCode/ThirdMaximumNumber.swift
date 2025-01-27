@@ -45,22 +45,47 @@
 
 func thirdMax(_ nums: [Int]) -> Int {
     let n = nums.count
-    let k = 3
-    let maxHeap = HeapArray(initialCapacity: n)
-    var hmSet: Set<Int> = Set()
-    for i in 0..<n {
+    let minHeap = HeapArray(initialCapacity: 3)
+    var i = 0
+    var hmSet: Set<Int> = []
+    while i < n && minHeap.getLength() < 3 {
         if !hmSet.contains(nums[i]) {
-            maxHeap.add(nums[i])
             hmSet.insert(nums[i])
+            minHeap.add(nums[i])
+        }
+        i += 1
+    }
+    if minHeap.getLength() < 3 {
+        while minHeap.getLength() > 1 {
+            minHeap.pop()
+        }
+        if let retVal = minHeap.pop() {
+            return retVal
+        } else {
+            print("should not happen either 2")
+            return nums[0]
         }
     }
-    if maxHeap.getLength() < k {
-        return maxHeap.peek()!
+    while i < n {
+        if !hmSet.contains(nums[i]) {
+            if let elem = minHeap.peek() {
+                if nums[i] > elem {
+                    minHeap.pop()
+                    minHeap.add(nums[i])
+                }
+            } else {
+                print("should not happen")
+            }
+            hmSet.insert(nums[i])
+        }
+        i += 1
     }
-    for _ in 0..<k - 1 {
-        maxHeap.pop()
+    if let retVal = minHeap.peek() {
+        return retVal
+    } else {
+        print("should not happen either")
+        return nums[0]
     }
-    return maxHeap.pop()!
 }
 
 func thirdMax1(_ nums: [Int]) -> Int {

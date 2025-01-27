@@ -131,7 +131,7 @@ class HeapArray {
 
         // Heapify the new node following a
         // Bottom-up approach
-        heapifyUpMaxHeap(length - 1)
+        heapifyUpMinHeap(length - 1)
     }
 
     private func increaseCapacity() {
@@ -156,7 +156,7 @@ class HeapArray {
         length -= 1
 
         // heapify the root node
-        heapifyDownMaxHeap(0)
+        heapifyDownMinHeap(0)
 
         return retVal
     }
