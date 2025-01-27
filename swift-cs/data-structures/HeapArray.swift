@@ -5,12 +5,8 @@
 //  Created by Alvaro Neira on 26-01-25.
 //
 
-//Max Heap: a node is greater than its children
-//     15
-//    /   \
-//   5     10
-//  / \   /
-// 2   4 3
+//Max Heap: a node is bigger than its children
+//Min Heap: a node is smaller than its children
 //If the tree root is at index 0, with valid indices 0 through n − 1, then each element a at index i has
 //
 //children at indices 2i + 1 and 2i + 2
@@ -23,9 +19,13 @@ class HeapArray {
         self.length = 0
     }
 
+    public func getLength() -> Int {
+        return self.length
+    }
+
     // Function to heapify ith node in a Heap
     // following a Bottom-up approach
-    private func heapifyUp(_ i: Int) {
+    private func heapifyUpMaxHeap(_ i: Int) {
         // Find parent
         let parent = (i - 1) / 2
 
@@ -40,7 +40,7 @@ class HeapArray {
                 arr.swapAt(i, parent)
 
                 // Recursively heapify the parent node
-                heapifyUp(parent)
+                heapifyUpMaxHeap(parent)
             }
         }
     }
@@ -48,7 +48,7 @@ class HeapArray {
     // TODO: why are there 2 heapify?
     // To heapify a subtree rooted with node i which is
     // an index in arr[]
-    private func heapifyDown(_ i: Int) {
+    private func heapifyDownMaxHeap(_ i: Int) {
         var largest = i  // Initialize largest as root
         let l = 2 * i + 1  // left = 2*i + 1
         let r = 2 * i + 2  // right = 2*i + 2
@@ -68,7 +68,54 @@ class HeapArray {
             arr.swapAt(i, largest)
 
             // Recursively heapify the affected sub-tree
-            heapifyDown(largest)
+            heapifyDownMaxHeap(largest)
+        }
+    }  // Function to heapify ith node in a Heap
+    // following a Bottom-up approach
+    private func heapifyUpMinHeap(_ i: Int) {
+        // Find parent
+        let parent = (i - 1) / 2
+
+        if parent >= 0 {
+            // For Max-Heap
+            // If current node is greater than its parent
+            // Swap both of them and call heapify again
+            // for the parent
+            if arr[i] < arr[parent] {
+
+                // swap arr[i] and arr[parent]
+                arr.swapAt(i, parent)
+
+                // Recursively heapify the parent node
+                heapifyUpMinHeap(parent)
+            }
+        }
+    }
+
+    // TODO: why are there 2 heapify?
+    // To heapify a subtree rooted with node i which is
+    // an index in arr[]
+    private func heapifyDownMinHeap(_ i: Int) {
+        var largest = i  // Initialize largest as root
+        let l = 2 * i + 1  // left = 2*i + 1
+        let r = 2 * i + 2  // right = 2*i + 2
+
+        // If left child is larger than root
+        if l < length && arr[l] < arr[largest] {
+            largest = l
+        }
+
+        // If right child is larger than largest so far
+        if r < length && arr[r] < arr[largest] {
+            largest = r
+        }
+
+        // If largest is not root
+        if largest != i {
+            arr.swapAt(i, largest)
+
+            // Recursively heapify the affected sub-tree
+            heapifyDownMinHeap(largest)
         }
     }
 
@@ -84,7 +131,7 @@ class HeapArray {
 
         // Heapify the new node following a
         // Bottom-up approach
-        heapifyUp(length - 1)
+        heapifyUpMaxHeap(length - 1)
     }
 
     private func increaseCapacity() {
@@ -97,6 +144,8 @@ class HeapArray {
         return arr.first
     }
     public func pop() -> Int? {
+        let retVal = arr.first
+
         // Get the last element
         let lastElement = arr[length - 1]
 
@@ -107,9 +156,8 @@ class HeapArray {
         length -= 1
 
         // heapify the root node
-        heapifyDown(0)
+        heapifyDownMaxHeap(0)
 
-        // return new size of Heap
-        return lastElement
+        return retVal
     }
 }
