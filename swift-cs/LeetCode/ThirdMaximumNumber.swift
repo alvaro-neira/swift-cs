@@ -46,46 +46,38 @@
 func thirdMax(_ nums: [Int]) -> Int {
     let n = nums.count
     let minHeap = HeapArray(initialCapacity: 3)
-    var i = 0
-    var hmSet: Set<Int> = []
-    while i < n && minHeap.getLength() < 3 {
-        if !hmSet.contains(nums[i]) {
-            hmSet.insert(nums[i])
-            minHeap.add(nums[i])
+    var taken: Set<Int> = []
+    for index in 0..<n {
+        // If current number was already taken, skip it.
+        if taken.contains(nums[index]) {
+            continue
         }
-        i += 1
-    }
-    if minHeap.getLength() < 3 {
-        while minHeap.getLength() > 1 {
-            minHeap.pop()
-        }
-        if let retVal = minHeap.pop() {
-            return retVal
-        } else {
-            print("should not happen either 2")
-            return nums[0]
-        }
-    }
-    while i < n {
-        if !hmSet.contains(nums[i]) {
-            if let elem = minHeap.peek() {
-                if nums[i] > elem {
-                    minHeap.pop()
-                    minHeap.add(nums[i])
-                }
-            } else {
-                print("should not happen")
+
+        // If min heap already has three numbers in it.
+        // Pop the smallest if current number is bigger than it.
+        if minHeap.getLength() == 3 {
+            if minHeap.peek()! < nums[index] {
+                taken.remove(minHeap.pop()!)
+
+                minHeap.add(nums[index])
+                taken.insert(nums[index])
             }
-            hmSet.insert(nums[i])
+        } else {
+            // If min heap does not have three numbers we can push it.
+            minHeap.add(nums[index])
+            taken.insert(nums[index])
         }
-        i += 1
     }
-    if let retVal = minHeap.peek() {
-        return retVal
-    } else {
-        print("should not happen either")
-        return nums[0]
+
+    // 'nums' has only one distinct element it will be the maximum.
+    if minHeap.getLength() == 1 {
+        return minHeap.peek()!
+    } else if minHeap.getLength() == 2 {  // 'nums' has two distinct elements.
+        let firstNum = minHeap.pop()!
+        return max(firstNum, minHeap.peek()!)
     }
+
+    return minHeap.peek()!
 }
 
 func thirdMax1(_ nums: [Int]) -> Int {
